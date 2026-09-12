@@ -38,12 +38,17 @@ function M.parse_diff(output_lines)
 end
 
 --- Get diff for the current file against a target revision
----@param revision string Git revision (e.g., "HEAD", "main")
+---@param diff_args string[] Git diff arguments (e.g., {"HEAD"} or {"HEAD..main"})
 ---@param file_path string Absolute path to the file
 ---@param callback function Called with the parsed hunks
-function M.get_file_diff(revision, file_path, callback)
-  -- Run git diff <revision> -- <file_path>
-  local cmd = { "git", "diff", revision, "--", file_path }
+function M.get_file_diff(diff_args, file_path, callback)
+  -- Run git diff <diff_args...> -- <file_path>
+  local cmd = { "git", "diff" }
+  for _, arg in ipairs(diff_args) do
+    table.insert(cmd, arg)
+  end
+  table.insert(cmd, "--")
+  table.insert(cmd, file_path)
   
   if vim.fn.has("nvim-0.10") == 1 then
     vim.system(cmd, { text = true }, function(obj)

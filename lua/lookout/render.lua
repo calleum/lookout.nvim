@@ -7,14 +7,15 @@ local namespace = vim.api.nvim_create_namespace("lookout_diffs")
 ---@param line_num number 0-indexed line number where the virtual lines should be attached
 ---@param lines string[] List of strings representing the added lines
 ---@param is_above boolean Whether to place the lines above the specified line_num
-function M.show_virtual_lines(buf, line_num, lines, is_above)
-  local config = require("lookout").config
+---@param hl_group string Highlight group name
+---@param prefix string Prefix string
+function M.show_virtual_lines(buf, line_num, lines, is_above, hl_group, prefix)
   local virt_lines = {}
   
   for _, line in ipairs(lines) do
     table.insert(virt_lines, {
-      { config.prefix, config.highlight_group },
-      { line, config.highlight_group }
+      { prefix, hl_group },
+      { line, hl_group }
     })
   end
 
